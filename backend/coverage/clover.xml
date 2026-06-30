@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1782427535670" clover="3.2.0">
-  <project timestamp="1782427535671" name="All files">
+<coverage generated="1782502063595" clover="3.2.0">
+  <project timestamp="1782502063595" name="All files">
     <metrics statements="1421" coveredstatements="548" conditionals="679" coveredconditionals="150" methods="103" coveredmethods="35" elements="2203" coveredelements="733" complexity="0" loc="1421" ncloc="1421" packages="3" files="17" classes="17"/>
     <package name="controllers">
       <metrics statements="1211" coveredstatements="406" conditionals="635" coveredconditionals="139" methods="94" coveredmethods="32"/>
@@ -227,8 +227,8 @@
         <line num="229" count="1" type="stmt"/>
         <line num="232" count="1" type="stmt"/>
         <line num="241" count="1" type="stmt"/>
-        <line num="244" count="25" type="stmt"/>
-        <line num="254" count="25" type="stmt"/>
+        <line num="244" count="27" type="stmt"/>
+        <line num="254" count="27" type="stmt"/>
         <line num="262" count="1" type="stmt"/>
         <line num="270" count="0" type="stmt"/>
         <line num="271" count="0" type="stmt"/>
@@ -241,8 +241,8 @@
         <line num="297" count="0" type="stmt"/>
         <line num="304" count="1" type="stmt"/>
         <line num="314" count="1" type="stmt"/>
-        <line num="316" count="4" type="stmt"/>
-        <line num="324" count="4" type="stmt"/>
+        <line num="316" count="3" type="stmt"/>
+        <line num="324" count="3" type="stmt"/>
         <line num="332" count="1" type="stmt"/>
         <line num="344" count="0" type="stmt"/>
         <line num="345" count="0" type="stmt"/>

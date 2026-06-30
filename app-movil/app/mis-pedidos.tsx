@@ -29,13 +29,24 @@ function formatCOP(value: unknown) {
 
 function formatDate(value: unknown) {
   if (!value) return '-';
-  return new Date(value as string).toLocaleDateString('es-CO', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const d = new Date(value as string);
+  if (isNaN(d.getTime())) return '-';
+  try {
+    return d.toLocaleDateString('es-CO', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch (e) {
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  }
 }
 
 function mapEstadoLabel(value: string | undefined): string {
@@ -557,9 +568,10 @@ export default function MisPedidosScreen() {
                       </View>
                     </View>
                     
-                    <Text style={styles.metaDate}>
-                      <Ionicons name="calendar-outline" size={12} color="#9e8879" style={{ marginRight: 4 }} /> {formatDate(pedido.createdAt)}
-                    </Text>
+                    <View style={styles.metaDateRow}>
+                      <Ionicons name="calendar-outline" size={12} color="#9e8879" style={{ marginRight: 4 }} />
+                      <Text style={styles.metaDateText}>{formatDate(pedido.createdAt)}</Text>
+                    </View>
 
                     <View style={styles.divider} />
 
@@ -637,7 +649,8 @@ const styles = StyleSheet.create({
   },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   cardTitle: { fontSize: 15, fontWeight: '800', color: '#3d2c1e' },
-  metaDate: { fontSize: 12, color: '#9e8879', fontWeight: '500', flexDirection: 'row', alignItems: 'center' },
+  metaDateRow: { flexDirection: 'row', alignItems: 'center' },
+  metaDateText: { fontSize: 12, color: '#9e8879', fontWeight: '500' },
   metaItems: { fontSize: 13, color: '#9e8879', fontWeight: '600' },
   totalText: { fontSize: 16, fontWeight: '800', color: '#192847' },
   divider: { height: 1, backgroundColor: '#f3ece6' },

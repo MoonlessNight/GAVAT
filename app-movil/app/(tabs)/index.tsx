@@ -4,7 +4,7 @@
  * chips de categorias lista de productos a 2 columas paginacion y un modal de detalle de producto
  */
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { ActivityIndicator, Alert, Dimensions, FlatList, Modal, Image, Platform, RefreshControl, Pressable, ScrollView, StyleSheet, TextInput, View, Text } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +15,8 @@ import { ThemedView } from "../../components/themed-view";
 import { useCarrito } from '../../src/context/CarritoContext';
 import { useAuth } from '../../src/context/AuthContext';
 import AdminToast from '../../components/admin-toast';
-import { router, useNavigation } from 'expo-router';
+import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 
 type CarritoCtx = {
     agregarProducto: (producto: unknown, cantidad: number) => Promise<void>;
@@ -26,6 +27,20 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const CARD_GAP = 10;
 const CARD_WIDTH = (SCREEN_WIDTH - 32 - CARD_GAP) / 2;
 const ITEMS_POR_PAGINA = 15;
+
+function safeFormatDate(value: string | undefined): string {
+    if (!value) return '';
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '';
+    try {
+        return d.toLocaleDateString('es-CO');
+    } catch (e) {
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+}
 
 export default function HomeScreen() {
     const { agregarProducto, totalItems } = useCarrito() as CarritoCtx;
@@ -152,15 +167,11 @@ export default function HomeScreen() {
         }
     };
 
-    const navigation = useNavigation();
-
-    useEffect(() => {
-        loadCatalogo();
-        const unsubscribe = navigation.addListener('focus', () => {
+    useFocusEffect(
+        useCallback(() => {
             loadCatalogo();
-        });
-        return unsubscribe;
-    }, [navigation]);
+        }, [])
+    );
 
     useEffect(() => {
         setPaginaActual(1);
@@ -182,7 +193,13 @@ export default function HomeScreen() {
                     setCalificacionSeleccionada(miComment.calificacion);
                 } else {
                     setMiComentarioId(null);
+                    setComentarioTexto('');
+                    setCalificacionSeleccionada(5);
                 }
+            } else {
+                setMiComentarioId(null);
+                setComentarioTexto('');
+                setCalificacionSeleccionada(5);
             }
         } catch (error) {
             console.error('Error al cargar comentarios:', error);
@@ -822,7 +839,7 @@ export default function HomeScreen() {
                                                                 {item.autor}
                                                             </ThemedText>
                                                             <ThemedText style={styles.commentDate}>
-                                                                {new Date(item.fecha).toLocaleDateString('es-CO')}
+                                                                {safeFormatDate(item.fecha)}
                                                             </ThemedText>
                                                         </View>
                                                         <View style={styles.commentStars}>

@@ -42,13 +42,24 @@ function formatCOP(value: number | undefined): string {
 
 function formatDate(value: string | undefined): string {
     if (!value) return '-';
-    return new Date(value).toLocaleDateString('es-CO', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '-';
+    try {
+        return d.toLocaleDateString('es-CO', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    } catch (e) {
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
 }
 
 function mapEstadoLabel(value: string | undefined): string {

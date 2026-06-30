@@ -48,6 +48,25 @@ function useToast(duration = 2500) {
   return { toast, showToast };
 }
 
+function safeFormatDate(value: string | undefined): string {
+  if (!value) return '';
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return '';
+  try {
+    return d.toLocaleDateString('es-CO', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  } catch (e) {
+    const day = String(d.getDate()).padStart(2, '0');
+    const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const monthName = months[d.getMonth()];
+    const year = d.getFullYear();
+    return `${day} ${monthName} ${year}`;
+  }
+}
+
 export default function AdminComentariosScreen() {
   const { user, isAuthenticated, isLoadingSession } = useAuth() as { user: AuthUser | null; isAuthenticated: boolean; isLoadingSession: boolean };
   const isAdmin = user?.rol === 'administrador';
@@ -765,11 +784,7 @@ export default function AdminComentariosScreen() {
                 <View style={s.ratingRow}>
                   {renderStars(item.calificacion)}
                   <ThemedText style={s.dateText}>
-                    {new Date(item.fecha).toLocaleDateString('es-CO', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
+                    {safeFormatDate(item.fecha)}
                   </ThemedText>
                 </View>
 

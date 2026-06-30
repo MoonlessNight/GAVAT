@@ -12,7 +12,15 @@ Se han identificado y corregido los siguientes aspectos críticos para asegurar 
 
 3. **Recarga Dinámica del Catálogo al Enfocar (Focus Listener)**:
    - **Qué faltaba**: El catálogo solo se cargaba durante el montaje inicial del componente (`useEffect` sin dependencias). Al alternar entre pestañas o volver de otras pantallas administrativas, no se actualizaban los productos o el stock actual.
-   - **Solución**: Se importó `useNavigation` y se le añadió un escucha de evento `'focus'` para recargar la lista del catálogo en cada enfoque de pantalla.
+   - **Solución**: Se importó `useFocusEffect` (alineado a `@react-navigation/native` como los demás módulos) para recargar dinámicamente el catálogo en cada enfoque de la pantalla.
+
+4. **Limpieza de Campos de Comentarios entre Productos**:
+   - **Qué faltaba**: Si el usuario abría el detalle de un producto comentado por él, los campos se pre-llenaban correctamente. Sin embargo, al abrir el detalle de otro producto no comentado, la opinión y calificación anteriores permanecían en los inputs.
+   - **Solución**: Se agregaron bloques `else` dentro de la carga de comentarios de `index.tsx` para limpiar los campos `comentarioTexto` y `calificacionSeleccionada` (reseteándolos a `''` y `5`) en caso de no existir una opinión previa del usuario.
+
+5. **Corrección de Colapso Silencioso por Parseo de Fecha**:
+   - **Qué faltaba**: Al procesar la fecha de comentarios (`new Date(item.fecha).toLocaleDateString()`), si por alguna razón la fecha venía vacía, nula o con un formato inválido, el motor Hermes (JavaScript de React Native) arrojaba un error crítico `RangeError: Invalid time value`, cerrando y colapsando la app al instante sin mostrar errores en la interfaz.
+   - **Solución**: Se añadió una validación segura en [index.tsx](file:///C:/Users/SENA/Desktop/Github/Test-Project/app-movil/app/(tabs)/index.tsx) y [comentarios.tsx](file:///C:/Users/SENA/Desktop/Github/Test-Project/app-movil/app/admin/comentarios.tsx) para verificar que la fecha sea válida antes de formatear, de modo que si es inválida, simplemente retorne un texto vacío en lugar de colapsar la app.
 
 ---
 
