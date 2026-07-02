@@ -422,7 +422,7 @@ export default function AdminProductoForm() {
           <Image source={{ uri: selectedImage.uri }} style={s.imagePreview} />
         ) : imagen ? (
           <Image
-            source={{ uri: imagen.startsWith('http') ? imagen : `${API_ORIGIN_URL}/uploads/${imagen.replace(/^\//, '')}` }}
+            source={{ uri: (imagen.startsWith('http') || imagen.startsWith('data:')) ? imagen : `${API_ORIGIN_URL}/uploads/${imagen.replace(/^\//, '')}` }}
             style={s.imagePreview}
           />
         ) : (

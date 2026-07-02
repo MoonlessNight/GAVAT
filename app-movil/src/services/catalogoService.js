@@ -37,7 +37,7 @@ const catalogoService = {
             return 'https://via.placeholder.com/300/200.png?text=Producto';
         }
 
-        if (path.startsWith('http://') || path.startsWith('https://')) {
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
             return path;
         }
 
