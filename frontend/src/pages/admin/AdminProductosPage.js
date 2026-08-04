@@ -291,16 +291,7 @@ const AdminProductosPage = () => {
 
   const handleToggleActivo = async (producto) => {
     try {
-      await api.put(`/admin/productos/${producto.id}`, {
-        nombre: producto.nombre,
-        descripcion: producto.descripcion,
-        precio: parseFloat(producto.precio),
-        stock: parseInt(producto.stock),
-        categoriaId: producto.categoriaId,
-        subcategoriaId: producto.subcategoriaId || null,
-        imagen: producto.imagen,
-        activo: !producto.activo
-      });
+      await api.patch(`/admin/productos/${producto.id}/toggle`);
       
       // Actualizar el estado local sin recargar todo
       setProductos(prevProductos => 
@@ -394,7 +385,7 @@ const AdminProductosPage = () => {
         </div>
       </div>
 
-      {mensaje.texto && (
+      {mensaje.texto && !showModal && (
         <Alert variant={mensaje.tipo} dismissible onClose={() => setMensaje({ tipo: '', texto: '' })}>
           {mensaje.texto}
         </Alert>
@@ -625,7 +616,12 @@ const AdminProductosPage = () => {
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
-          <Modal.Body>
+          <Modal.Body style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
+            {mensaje.texto && showModal && (
+              <Alert variant={mensaje.tipo} dismissible onClose={() => setMensaje({ tipo: '', texto: '' })}>
+                {mensaje.texto}
+              </Alert>
+            )}
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
@@ -722,6 +718,7 @@ const AdminProductosPage = () => {
                         alt="Vista previa del producto"
                         style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '0.75rem' }}
                         onError={(e) => {
+                          e.target.onerror = null;
                           e.target.src = '/producto-default.jpg';
                         }}
                       />

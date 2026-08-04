@@ -83,9 +83,9 @@ const RegisterPage = () => {
   return (
     <Container className="py-5">
       <Row className="justify-content-center">
-        <Col md={8} lg={6}>
+        <Col xs={11} sm={10} md={8} lg={7} xl={6}>
           <Card className="register-card shadow">
-            <Card.Body className="p-5">
+            <Card.Body className="p-3 p-sm-4 p-md-5">
               <div className="text-center mb-4">
                 <h2 className="register-title">
                   <i className="bi bi-person-plus me-2"></i>

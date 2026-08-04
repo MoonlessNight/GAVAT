@@ -176,6 +176,7 @@ const PedidoConfirmadoPage = () => {
                             style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                             className="rounded me-3"
                             onError={(e) => {
+                              e.target.onerror = null;
                               e.target.src = '/producto-default.jpg';
                             }}
                           />

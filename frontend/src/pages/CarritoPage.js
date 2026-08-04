@@ -178,6 +178,7 @@ const CarritoPage = () => {
                               style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                               className="rounded me-3"
                               onError={(e) => {
+                                e.target.onerror = null;
                                 e.target.src = '/producto-default.jpg';
                               }}
                             />

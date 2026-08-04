@@ -47,9 +47,9 @@ const LoginPage = () => {
   return (
     <Container className="py-5">
       <Row className="justify-content-center">
-        <Col md={6} lg={5}>
+        <Col xs={11} sm={9} md={7} lg={5}>
           <Card className="login-card shadow">
-            <Card.Body className="p-5">
+            <Card.Body className="p-3 p-sm-4 p-md-5">
               <div className="text-center mb-4">
                 <h2 className="login-title">
                   <i className="bi bi-box-arrow-in-right me-2"></i>

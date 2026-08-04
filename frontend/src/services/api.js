@@ -70,7 +70,7 @@ apiClient.interceptors.response.use(
       const { status, data } = error.response;
       
       // Token expirado o inválido (401 Unauthorized)
-      if (status === 401) {
+      if (status === 401 && error.config && !error.config.url.includes('/auth/login') && window.location.pathname !== '/login') {
         console.error('⚠️ Sesión expirada. Redirigiendo al login...');
         
         // Eliminar token del localStorage
