@@ -16,6 +16,16 @@ function AdminPedidosPage() {
   
   const [paginaActual, setPaginaActual] = useState(1);
   const registrosPorPagina = 25;
+  const [mensaje, setMensaje] = useState(null);
+  const [tipoMensaje, setTipoMensaje] = useState('success');
+
+  const mostrarMensaje = (msg, tipo = 'success') => {
+    setMensaje(msg);
+    setTipoMensaje(tipo);
+    setTimeout(() => {
+      setMensaje(null);
+    }, 6000);
+  };
 
   const cargarPedidos = useCallback(async () => {
     try {
@@ -23,7 +33,7 @@ function AdminPedidosPage() {
       setPedidos(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error al cargar pedidos:', error);
-      alert('Error al cargar pedidos');
+      mostrarMensaje(error.message || 'Error al cargar pedidos', 'danger');
       setPedidos([]);
     } finally {
       setLoading(false);
@@ -37,7 +47,7 @@ function AdminPedidosPage() {
   const handleCambiarEstado = async (pedidoId, nuevoEstado) => {
     try {
       const response = await pedidoService.actualizarEstadoPedido(pedidoId, nuevoEstado);
-      alert('Estado del pedido actualizado');
+      mostrarMensaje(response?.message || 'Estado del pedido actualizado', 'success');
       cargarPedidos();
       if (showDetalleModal && pedidoSeleccionado?.id === pedidoId) {
         const pedidoActualizado = response?.data?.pedido || response?.pedido || response?.data || null;
@@ -46,7 +56,7 @@ function AdminPedidosPage() {
         }
       }
     } catch (error) {
-      alert('Error al cambiar estado del pedido');
+      mostrarMensaje(error.message || 'Error al cambiar estado del pedido', 'danger');
     }
   };
 
@@ -124,6 +134,14 @@ function AdminPedidosPage() {
           </ul>
         </div>
       </div>
+
+      {mensaje && (
+        <div className={`alert alert-${tipoMensaje} alert-dismissible fade show mb-4`} role="alert" style={{ borderLeft: `5px solid ${tipoMensaje === 'success' ? '#198754' : '#dc3545'}` }}>
+          <i className={`bi ${tipoMensaje === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'} me-2`}></i>
+          {mensaje}
+          <button type="button" className="btn-close" onClick={() => setMensaje(null)} aria-label="Close"></button>
+        </div>
+      )}
 
       {/* FILTROS */}
       <div className="filtros-card mb-4">

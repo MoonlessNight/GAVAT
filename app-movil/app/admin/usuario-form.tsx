@@ -73,7 +73,6 @@ export default function AdminUsuarioForm() {
     setErrorMsg('');
 
     if (!nombre.trim()) { setErrorMsg('El nombre es obligatorio'); return false; }
-    if (!apellido.trim()) { setErrorMsg('El apellido es obligatorio'); return false; }
 
     if (!email.trim()) { setErrorMsg('El correo es obligatorio'); return false; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setErrorMsg('Correo no válido'); return false; }
@@ -104,7 +103,7 @@ export default function AdminUsuarioForm() {
       if (editing && usuario?.id) {
         await apiClient.put(`/admin/usuarios/${usuario.id}`, {
           nombre: nombre.trim(),
-          apellido: apellido.trim(),
+          apellido: apellido.trim() || null,
           email: email.trim(),
           rol,
           ...(telefono.trim() ? { telefono: telefono.trim() } : {}),
@@ -117,7 +116,7 @@ export default function AdminUsuarioForm() {
       } else {
         await apiClient.post('/admin/usuarios', {
           nombre: nombre.trim(),
-          apellido: apellido.trim(),
+          apellido: apellido.trim() || null,
           email: email.trim(),
           password,
           rol,
@@ -183,7 +182,7 @@ export default function AdminUsuarioForm() {
               />
             </View>
             <View style={{ flex: 1 }}>
-              <ThemedText style={s.label}>Apellido *</ThemedText>
+              <ThemedText style={s.label}>Apellido</ThemedText>
               <TextInput
                 style={s.input}
                 placeholder="Apellido"

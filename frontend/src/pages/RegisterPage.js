@@ -120,13 +120,12 @@ const RegisterPage = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label className="register-label">Apellido *</Form.Label>
+                      <Form.Label className="register-label">Apellido</Form.Label>
                       <Form.Control
                         type="text"
                         name="apellido"
                         value={formData.apellido}
                         onChange={handleChange}
-                        required
                         className="register-input"
                       />
                     </Form.Group>

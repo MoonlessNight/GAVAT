@@ -156,7 +156,7 @@ export default function TabTwoScreen() {
         if (isRegisterMode) {
             //validaciones de registro 
             //todos los campos marcados con * son obligatorios
-            if (!nombre || !apellido || !email || !password || !confirmPassword) {
+            if (!nombre || !email || !password || !confirmPassword) {
                 setErrorMessage('completa todos los campos obligatorios *.');
                 return;
             }
@@ -331,7 +331,7 @@ export default function TabTwoScreen() {
                     style={styles.input}
                   />
                   <TextInput
-                    placeholder="Apellido *"
+                    placeholder="Apellido"
                     placeholderTextColor="#b8a99a"
                     value={apellido}
                     onChangeText={setApellido}

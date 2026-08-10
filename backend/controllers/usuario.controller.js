@@ -131,10 +131,10 @@ const crearUsuario = async (req, res) => {
     const { nombre, apellido, email, password, rol, telefono, direccion } = req.body;
     
     // VALIDACIÓN 1: Campos obligatorios
-    if (!nombre || !apellido || !email || !password || !rol) {
+    if (!nombre || !email || !password || !rol) {
       return res.status(400).json({
         success: false,
-        message: 'Faltan campos requeridos: nombre, apellido, email, password y rol'
+        message: 'Faltan campos requeridos: nombre, email, password y rol'
       });
     }
     
@@ -159,7 +159,7 @@ const crearUsuario = async (req, res) => {
     // se encarga de hashear (encriptar) la contraseña automáticamente.
     const nuevoUsuario = await Usuario.create({
       nombre,
-      apellido,
+      apellido: apellido || null,
       email,
       password,                          // Se hashea automáticamente en el hook
       rol,                               // El admin elige el rol
@@ -262,7 +262,7 @@ const actualizarUsuario = async (req, res) => {
     
     // Actualiza SOLO los campos que se enviaron
     if (nombre !== undefined) usuario.nombre = nombre;
-    if (apellido !== undefined) usuario.apellido = apellido;
+    if (apellido !== undefined) usuario.apellido = apellido || null;
     if (telefono !== undefined) usuario.telefono = telefono;
     if (direccion !== undefined) usuario.direccion = direccion;
     if (rol !== undefined) usuario.rol = rol;

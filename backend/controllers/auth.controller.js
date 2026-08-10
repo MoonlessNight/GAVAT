@@ -32,13 +32,13 @@ const register = async (req, res) => {
     
     // VALIDACIÓN 1: Verifica que los campos obligatorios existan.
     // El operador ! convierte a booleano: si es vacío, null o undefined, retorna true.
-    if (!nombre || !apellido || !email || !password) {
+    if (!nombre || !email || !password) {
       // res.status(400) = Bad Request (datos inválidos del cliente)
       // .json() envía la respuesta en formato JSON
       // return detiene la ejecución para que no siga al siguiente código
       return res.status(400).json({
         success: false,
-        message: 'Faltan campos requeridos: nombre, apellido, email y password son obligatorios'
+        message: 'Faltan campos requeridos: nombre, email y password son obligatorios'
       });
     }
     
@@ -81,7 +81,7 @@ const register = async (req, res) => {
     // El password se guarda encriptado, nunca en texto plano.
     const nuevoUsuario = await Usuario.create({
       nombre,                          // Nombre del usuario
-      apellido,                        // Apellido del usuario
+      apellido: apellido || null,      // Apellido del usuario (opcional)
       email,                           // Email (único)
       password,                        // Contraseña (será hasheada por el hook)
       telefono: telefono || null,      // Teléfono opcional: si no viene, guarda null
@@ -326,7 +326,7 @@ const updateMe = async (req, res) => {
     
     // ACTUALIZAR CAMPOS: solo actualiza si el campo viene definido en el body.
     if (nombre !== undefined) usuario.nombre = nombre;
-    if (apellido !== undefined) usuario.apellido = apellido;
+    if (apellido !== undefined) usuario.apellido = apellido || null;
     if (telefono !== undefined) usuario.telefono = telefono;
     if (direccion !== undefined) usuario.direccion = direccion;
     

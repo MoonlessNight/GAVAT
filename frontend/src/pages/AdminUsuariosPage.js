@@ -26,6 +26,17 @@ function AdminUsuariosPage() {
   
   const [paginaActual, setPaginaActual] = useState(1);
   const registrosPorPagina = 25;
+  const [mensaje, setMensaje] = useState(null);
+  const [tipoMensaje, setTipoMensaje] = useState('success');
+  const [confirmarEliminarUsuario, setConfirmarEliminarUsuario] = useState(null);
+
+  const mostrarMensaje = (msg, tipo = 'success') => {
+    setMensaje(msg);
+    setTipoMensaje(tipo);
+    setTimeout(() => {
+      setMensaje(null);
+    }, 6000);
+  };
 
   const cargarUsuarios = useCallback(async () => {
     try {
@@ -33,7 +44,7 @@ function AdminUsuariosPage() {
       setUsuarios(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error al cargar usuarios:', error);
-      alert('Error al cargar usuarios');
+      mostrarMensaje(error.message || 'Error al cargar usuarios', 'danger');
       setUsuarios([]);
     } finally {
       setLoading(false);
@@ -50,21 +61,21 @@ function AdminUsuariosPage() {
       if (editando) {
         const dataActualizar = { ...usuarioActual };
         if (!dataActualizar.password) delete dataActualizar.password;
-        await usuarioService.actualizarUsuario(usuarioActual.id, dataActualizar);
-        alert('Usuario actualizado exitosamente');
+        const res = await usuarioService.actualizarUsuario(usuarioActual.id, dataActualizar);
+        mostrarMensaje(res?.message || 'Usuario actualizado exitosamente', 'success');
       } else {
         if (!usuarioActual.password) {
-          alert('La contraseña es requerida para nuevos usuarios');
+          mostrarMensaje('La contraseña es requerida para nuevos usuarios', 'danger');
           return;
         }
-        await usuarioService.crearUsuario(usuarioActual);
-        alert('Usuario creado exitosamente');
+        const res = await usuarioService.crearUsuario(usuarioActual);
+        mostrarMensaje(res?.message || 'Usuario creado exitosamente', 'success');
       }
       setShowModal(false);
       limpiarFormulario();
       cargarUsuarios();
     } catch (error) {
-      alert(error.response?.data?.message || 'Error al guardar usuario');
+      mostrarMensaje(error.message || 'Error al guardar usuario', 'danger');
     }
   };
 
@@ -74,23 +85,26 @@ function AdminUsuariosPage() {
     setShowModal(true);
   };
 
-  const handleEliminar = async (id) => {
-    if (!window.confirm('¿Estás seguro de eliminar este usuario?')) return;
+  const confirmarEliminacionEjecutar = async () => {
+    if (!confirmarEliminarUsuario) return;
     try {
-      await usuarioService.eliminarUsuario(id);
-      alert('Usuario eliminado exitosamente');
+      const res = await usuarioService.eliminarUsuario(confirmarEliminarUsuario.id);
+      mostrarMensaje(res?.message || 'Usuario eliminado exitosamente', 'success');
       cargarUsuarios();
     } catch (error) {
-      alert('Error al eliminar usuario');
+      mostrarMensaje(error.message || 'Error al eliminar usuario', 'danger');
+    } finally {
+      setConfirmarEliminarUsuario(null);
     }
   };
 
   const handleToggleActivo = async (usuario) => {
     try {
-      await usuarioService.cambiarEstado(usuario.id);
+      const res = await usuarioService.cambiarEstado(usuario.id);
+      mostrarMensaje(res?.message || `Usuario ${usuario.activo ? 'desactivado' : 'activado'} exitosamente`, 'success');
       cargarUsuarios();
     } catch (error) {
-      alert('Error al cambiar estado del usuario');
+      mostrarMensaje(error.message || 'Error al cambiar estado del usuario', 'danger');
     }
   };
 
@@ -167,6 +181,14 @@ function AdminUsuariosPage() {
           </button>
         </div>
       </div>
+
+      {mensaje && (
+        <div className={`alert alert-${tipoMensaje} alert-dismissible fade show mb-4`} role="alert" style={{ borderLeft: `5px solid ${tipoMensaje === 'success' ? '#198754' : '#dc3545'}` }}>
+          <i className={`bi ${tipoMensaje === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'} me-2`}></i>
+          {mensaje}
+          <button type="button" className="btn-close" onClick={() => setMensaje(null)} aria-label="Close"></button>
+        </div>
+      )}
 
       {/* FILTROS */}
       <div className="filtros-card mb-4">
@@ -247,7 +269,7 @@ function AdminUsuariosPage() {
                           onClick={() => handleToggleActivo(usuario)} title={usuario.activo ? 'Desactivar' : 'Activar'}>
                           <i className={`bi ${usuario.activo ? 'bi-toggle-on' : 'bi-toggle-off'}`}></i>
                         </button>
-                        <button className="btn-action delete" onClick={() => handleEliminar(usuario.id)} title="Eliminar">
+                        <button className="btn-action delete" onClick={() => setConfirmarEliminarUsuario(usuario)} title="Eliminar">
                           <i className="bi bi-trash"></i>
                         </button>
                       </div>
@@ -286,6 +308,27 @@ function AdminUsuariosPage() {
               <button className="btn-paginacion" onClick={() => setPaginaActual(totalPaginas)} disabled={paginaActual === totalPaginas}>
                 <i className="bi bi-chevron-bar-right"></i>
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL */}
+      {confirmarEliminarUsuario && (
+        <div className="modal-overlay">
+          <div className="modal-container" style={{ maxWidth: '450px' }}>
+            <div className="modal-header-custom" style={{ background: '#f8d7da', borderBottom: '1px solid #f5c2c7' }}>
+              <h5 style={{ color: '#842029' }}>Confirmar Eliminación</h5>
+              <button className="btn-close-custom" style={{ color: '#842029' }} onClick={() => setConfirmarEliminarUsuario(null)}>×</button>
+            </div>
+            <div className="modal-body-custom text-center py-4">
+              <i className="bi bi-exclamation-triangle-fill text-danger mb-3" style={{ fontSize: '3rem', display: 'block' }}></i>
+              <p className="mb-0">¿Estás seguro de que deseas eliminar permanentemente al usuario <strong>{confirmarEliminarUsuario.nombre} {confirmarEliminarUsuario.apellido || ''}</strong>?</p>
+              <small className="text-muted">{confirmarEliminarUsuario.email}</small>
+            </div>
+            <div className="modal-footer-custom bg-light" style={{ padding: '0.75rem 1.5rem' }}>
+              <button className="btn-cancelar" onClick={() => setConfirmarEliminarUsuario(null)}>Cancelar</button>
+              <button className="btn-guardar" style={{ background: 'linear-gradient(135deg, #e05e5e, #dc3545)', color: 'white' }} onClick={confirmarEliminacionEjecutar}>Eliminar</button>
             </div>
           </div>
         </div>
