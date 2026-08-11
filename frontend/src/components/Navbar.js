@@ -275,20 +275,40 @@ const NavigationBar = memo(() => {
           color: var(--bs-gold, #f5c271) !important;
         }
         /* Dropdown personalizado */
-        :global(.nav-dropdown-custom .dropdown-menu) {
+        .nav-dropdown-custom .dropdown-menu {
           border: none;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
           border-radius: 0.75rem;
           padding: 0.5rem;
           margin-top: 0.5rem;
         }
-        :global(.nav-dropdown-custom .dropdown-item) {
+        @media (max-width: 991.98px) {
+          .nav-dropdown-custom .dropdown-menu {
+            max-height: 75vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+          .nav-dropdown-custom .dropdown-menu::-webkit-scrollbar {
+            width: 6px;
+          }
+          .nav-dropdown-custom .dropdown-menu::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .nav-dropdown-custom .dropdown-menu::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 3px;
+          }
+          .nav-dropdown-custom .dropdown-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+          }
+        }
+        .nav-dropdown-custom .dropdown-item {
           border-radius: 0.5rem;
           padding: 0.625rem 1rem;
           transition: all 0.2s ease;
           color: var(--bg-negativo, #192847) !important;
         }
-        :global(.nav-dropdown-custom .dropdown-item:hover) {
+        .nav-dropdown-custom .dropdown-item:hover {
           background: linear-gradient(135deg, var(--bs-gold, #f5c271), var(--bs-gold-dark, #c7984e));
           color: var(--fnt-black, #000000) !important;
         }
@@ -328,11 +348,11 @@ const NavigationBar = memo(() => {
           background: linear-gradient(135deg, var(--bs-gold-dark, #c7984e), var(--bs-gold, #f5c271));
         }
         /* Quitar la flecha del dropdown en todos los dropdowns del navbar */
-        :global(.custom-navbar .dropdown-toggle::after) {
+        .custom-navbar .dropdown-toggle::after {
           display: none !important;
         }
         /* Eliminar estilos de link por defecto de Bootstrap para el toggle del avatar */
-        :global(.custom-navbar .auth-dropdown-circle .dropdown-toggle) {
+        .custom-navbar .auth-dropdown-circle .dropdown-toggle {
           padding: 0 !important;
           border: none !important;
           background: transparent !important;
@@ -342,17 +362,17 @@ const NavigationBar = memo(() => {
           box-shadow: none !important;
           outline: none !important;
         }
-        :global(.custom-navbar .auth-dropdown-circle .dropdown-toggle:hover),
-        :global(.custom-navbar .auth-dropdown-circle .dropdown-toggle:focus),
-        :global(.custom-navbar .auth-dropdown-circle .dropdown-toggle:active),
-        :global(.custom-navbar .auth-dropdown-circle.show .dropdown-toggle) {
+        .custom-navbar .auth-dropdown-circle .dropdown-toggle:hover,
+        .custom-navbar .auth-dropdown-circle .dropdown-toggle:focus,
+        .custom-navbar .auth-dropdown-circle .dropdown-toggle:active,
+        .custom-navbar .auth-dropdown-circle.show .dropdown-toggle {
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
           outline: none !important;
         }
         /* Estilos para el toggle de dropdowns estándar en el navbar */
-        :global(.custom-navbar .nav-dropdown-custom .dropdown-toggle) {
+        .custom-navbar .nav-dropdown-custom .dropdown-toggle {
           color: var(--fnt-light, #ffffff) !important;
           font-weight: 500;
           padding: 0.5rem 1rem !important;
@@ -365,10 +385,10 @@ const NavigationBar = memo(() => {
           box-shadow: none !important;
           outline: none !important;
         }
-        :global(.custom-navbar .nav-dropdown-custom .dropdown-toggle:hover),
-        :global(.custom-navbar .nav-dropdown-custom .dropdown-toggle:focus),
-        :global(.custom-navbar .nav-dropdown-custom .dropdown-toggle:active),
-        :global(.custom-navbar .nav-dropdown-custom.show .dropdown-toggle) {
+        .custom-navbar .nav-dropdown-custom .dropdown-toggle:hover,
+        .custom-navbar .nav-dropdown-custom .dropdown-toggle:focus,
+        .custom-navbar .nav-dropdown-custom .dropdown-toggle:active,
+        .custom-navbar .nav-dropdown-custom.show .dropdown-toggle {
           background-color: rgba(255, 255, 255, 0.08) !important;
           color: var(--fnt-light, #ffffff) !important;
           box-shadow: none !important;

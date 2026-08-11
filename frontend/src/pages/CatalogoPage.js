@@ -7,12 +7,10 @@
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import catalogoService from '../services/catalogoService';
 import carritoService from '../services/carritoService';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { useAuth } from '../context/AuthContext';
 
 const CatalogoPage = () => {
   const [productos, setProductos] = useState([]);
@@ -32,8 +30,7 @@ const CatalogoPage = () => {
     pagina: 1,
   });
 
-  const { isAuthenticated, isCliente } = useAuth();
-  const navigate = useNavigate();
+
 
   const fetchProductos = useCallback(async (filtrosActuales) => {
     setLoading(true);
@@ -353,17 +350,25 @@ const CatalogoPage = () => {
         }
         .btn-limpiar-filtros {
           background: transparent;
-          border: 2px solid var(--bs-gold, #f5c271);
-          color: var(--bs-gold-dark, #c7984e);
+          border: 1.5px solid var(--bg-negativo, #192847);
+          color: var(--bg-negativo, #192847);
           border-radius: 0.75rem;
-          padding: 0.5rem;
+          padding: 0.625rem;
           font-weight: 600;
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
         }
         .btn-limpiar-filtros:hover {
-          background: var(--bs-gold, #f5c271);
-          color: var(--fnt-black, #000000);
+          background: var(--bg-negativo, #192847);
+          color: var(--fnt-light, #ffffff);
           transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(25, 40, 71, 0.15);
+        }
+        .btn-limpiar-filtros:active {
+          transform: translateY(0);
         }
         .btn-paginacion {
           background: transparent;

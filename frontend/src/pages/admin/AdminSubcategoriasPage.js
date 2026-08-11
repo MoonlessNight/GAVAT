@@ -22,6 +22,7 @@ const AdminSubcategoriasPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [editando, setEditando] = useState(null);
   const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
+  const [errorForm, setErrorForm] = useState('');
   const [tipoExportacion, setTipoExportacion] = useState('pdf');
   
   // Paginación
@@ -111,6 +112,7 @@ const AdminSubcategoriasPage = () => {
   }, []);
 
   const handleShowModal = (subcategoria = null) => {
+    setErrorForm('');
     if (subcategoria) {
       setEditando(subcategoria);
       setFormData({
@@ -135,6 +137,7 @@ const AdminSubcategoriasPage = () => {
     setShowModal(false);
     setEditando(null);
     setFormData({ nombre: '', descripcion: '', categoriaId: '', activo: true });
+    setErrorForm('');
   };
 
   const handleChange = (e) => {
@@ -161,10 +164,7 @@ const AdminSubcategoriasPage = () => {
       loadData();
     } catch (error) {
       console.error('Error al guardar subcategoría:', error);
-      setMensaje({ 
-        tipo: 'danger', 
-        texto: error.response?.data?.message || 'Error al guardar la subcategoría' 
-      });
+      setErrorForm(error.response?.data?.message || error.message || 'Error al guardar la subcategoría');
     }
   };
 
@@ -484,6 +484,12 @@ const AdminSubcategoriasPage = () => {
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
+            {errorForm && (
+              <Alert variant="danger" className="py-2 px-3 mb-3 d-flex align-items-center gap-2">
+                <i className="bi bi-exclamation-triangle-fill text-danger"></i>
+                <span>{errorForm}</span>
+              </Alert>
+            )}
             <Form.Group className="mb-3">
               <Form.Label>Categoría <span className="text-danger">*</span></Form.Label>
               <Form.Select

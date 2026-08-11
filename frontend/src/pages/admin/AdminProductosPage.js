@@ -56,6 +56,7 @@ const AdminProductosPage = () => {
   const [imagenArchivo, setImagenArchivo] = useState(null);
   const [previewImagen, setPreviewImagen] = useState('');
   const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
+  const [errorForm, setErrorForm] = useState('');
   const [tipoExportacion, setTipoExportacion] = useState('pdf');
   
   // Estados para filtros
@@ -159,6 +160,7 @@ const AdminProductosPage = () => {
   }, [loadData]);
 
   const handleShowModal = (producto = null) => {
+    setErrorForm('');
     if (producto) {
       setEditando(producto);
       setFormData({
@@ -203,6 +205,7 @@ const AdminProductosPage = () => {
     });
     setImagenArchivo(null);
     setPreviewImagen('');
+    setErrorForm('');
   };
 
   const handleChange = (e) => {
@@ -266,10 +269,7 @@ const AdminProductosPage = () => {
       loadData();
     } catch (error) {
       console.error('Error al guardar producto:', error);
-      setMensaje({ 
-        tipo: 'danger', 
-        texto: error.response?.data?.message || 'Error al guardar el producto' 
-      });
+      setErrorForm(error.response?.data?.message || error.message || 'Error al guardar el producto');
     }
   };
 
@@ -617,9 +617,10 @@ const AdminProductosPage = () => {
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
-            {mensaje.texto && showModal && (
-              <Alert variant={mensaje.tipo} dismissible onClose={() => setMensaje({ tipo: '', texto: '' })}>
-                {mensaje.texto}
+            {errorForm && (
+              <Alert variant="danger" className="py-2 px-3 mb-3 d-flex align-items-center gap-2">
+                <i className="bi bi-exclamation-triangle-fill text-danger"></i>
+                <span>{errorForm}</span>
               </Alert>
             )}
             <Row>

@@ -20,6 +20,7 @@ const AdminCategoriasPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [editando, setEditando] = useState(null);
   const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
+  const [errorForm, setErrorForm] = useState('');
   
   // Filtros
   const [filtros, setFiltros] = useState({
@@ -98,6 +99,7 @@ const AdminCategoriasPage = () => {
   }, []);
 
   const handleShowModal = (categoria = null) => {
+    setErrorForm('');
     if (categoria) {
       setEditando(categoria);
       setFormData({
@@ -120,6 +122,7 @@ const AdminCategoriasPage = () => {
     setShowModal(false);
     setEditando(null);
     setFormData({ nombre: '', descripcion: '', activo: true });
+    setErrorForm('');
   };
 
   const handleChange = (e) => {
@@ -146,10 +149,7 @@ const AdminCategoriasPage = () => {
       loadCategorias();
     } catch (error) {
       console.error('Error al guardar categoría:', error);
-      setMensaje({ 
-        tipo: 'danger', 
-        texto: error.response?.data?.message || 'Error al guardar la categoría' 
-      });
+      setErrorForm(error.response?.data?.message || error.message || 'Error al guardar la categoría');
     }
   };
 
@@ -396,6 +396,12 @@ const AdminCategoriasPage = () => {
             </div>
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
+                {errorForm && (
+                  <div className="alert alert-danger p-2 mb-3 small d-flex align-items-center gap-2">
+                    <i className="bi bi-exclamation-triangle-fill"></i>
+                    <span>{errorForm}</span>
+                  </div>
+                )}
                 <div className="form-group">
                   <label>Nombre <span className="text-danger">*</span></label>
                   <input

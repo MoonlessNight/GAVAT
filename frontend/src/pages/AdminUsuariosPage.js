@@ -28,6 +28,7 @@ function AdminUsuariosPage() {
   const registrosPorPagina = 25;
   const [mensaje, setMensaje] = useState(null);
   const [tipoMensaje, setTipoMensaje] = useState('success');
+  const [errorForm, setErrorForm] = useState('');
   const [confirmarEliminarUsuario, setConfirmarEliminarUsuario] = useState(null);
 
   const mostrarMensaje = (msg, tipo = 'success') => {
@@ -57,6 +58,7 @@ function AdminUsuariosPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorForm('');
     try {
       if (editando) {
         const dataActualizar = { ...usuarioActual };
@@ -65,7 +67,7 @@ function AdminUsuariosPage() {
         mostrarMensaje(res?.message || 'Usuario actualizado exitosamente', 'success');
       } else {
         if (!usuarioActual.password) {
-          mostrarMensaje('La contraseña es requerida para nuevos usuarios', 'danger');
+          setErrorForm('La contraseña es requerida para nuevos usuarios');
           return;
         }
         const res = await usuarioService.crearUsuario(usuarioActual);
@@ -75,7 +77,7 @@ function AdminUsuariosPage() {
       limpiarFormulario();
       cargarUsuarios();
     } catch (error) {
-      mostrarMensaje(error.message || 'Error al guardar usuario', 'danger');
+      setErrorForm(error.message || 'Error al guardar usuario');
     }
   };
 
@@ -121,6 +123,7 @@ function AdminUsuariosPage() {
       activo: true
     });
     setEditando(false);
+    setErrorForm('');
   };
 
   const limpiarFiltros = () => {
@@ -344,6 +347,12 @@ function AdminUsuariosPage() {
             </div>
             <form onSubmit={handleSubmit}>
               <div className="modal-body-custom">
+                {errorForm && (
+                  <div className="alert alert-danger p-2 mb-3 small d-flex align-items-center gap-2">
+                    <i className="bi bi-exclamation-triangle-fill"></i>
+                    <span>{errorForm}</span>
+                  </div>
+                )}
                 <div className="row">
                   <div className="col-md-4 mb-3">
                     <label className="form-label fw-bold">Nombre</label>
